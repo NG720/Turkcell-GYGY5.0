@@ -1,0 +1,107 @@
+erDiagram
+
+    YAZAR {
+        int YazarID PK
+        string Ad
+        string Soyad
+        string Uyruk
+        string Biyografi
+    }
+
+    KATEGORI {
+        int KategoriID PK
+        string Ad
+        string Aciklama
+    }
+
+    KITAP {
+        int KitapID PK
+        string ISBN UK
+        string Baslik
+        int YazarID FK
+        int KategoriID FK
+        string Yayinevi
+        int YayinYili
+        int SayfaSayisi
+        int ToplamKopya
+        int MevcutKopya
+        string Dil
+        string Konum
+    }
+
+    OGRENCI {
+        int OgrenciID PK
+        string OgrenciNo UK
+        string Ad
+        string Soyad
+        string Email
+        string Telefon
+        string Bolum
+        string Sinif
+        date KayitTarihi
+        bool AktifMi
+    }
+
+    GOREVLI {
+        int GorevliID PK
+        string SicilNo UK
+        string Ad
+        string Soyad
+        string Email
+        string Telefon
+        string Pozisyon
+        date IsBaslamaTarihi
+        string Sifre
+    }
+
+    ODUNC_ALMA {
+        int OduncID PK
+        int OgrenciID FK
+        int KitapID FK
+        int GorevliID FK
+        date OduncTarihi
+        date PlanlananIadeTarihi
+        string Durum
+    }
+
+    IADE {
+        int IadeID PK
+        int OduncID FK
+        int GorevliID FK
+        date IadeTarihi
+        string KitapDurumu
+        decimal CezaTutari
+        string Notlar
+    }
+
+    REZERVASYON {
+        int RezervasyonID PK
+        int OgrenciID FK
+        int KitapID FK
+        date RezervasyonTarihi
+        date SonGecerlilikTarihi
+        string Durum
+    }
+
+    CEZA {
+        int CezaID PK
+        int OduncID FK
+        int OgrenciID FK
+        decimal Tutar
+        string Tip
+        string OdemeDurumu
+        date OdemeTarihi
+    }
+
+    %% İlişkiler
+    YAZAR       ||--o{ KITAP        : "yazar"
+    KATEGORI    ||--o{ KITAP        : "kategorize eder"
+    OGRENCI     ||--o{ ODUNC_ALMA   : "ödünç alır"
+    KITAP       ||--o{ ODUNC_ALMA   : "ödünç verilir"
+    GOREVLI     ||--o{ ODUNC_ALMA   : "kaydeder"
+    ODUNC_ALMA  ||--o| IADE         : "iade edilir"
+    GOREVLI     ||--o{ IADE         : "kabul eder"
+    OGRENCI     ||--o{ REZERVASYON  : "rezerve eder"
+    KITAP       ||--o{ REZERVASYON  : "rezerve edilir"
+    ODUNC_ALMA  ||--o{ CEZA         : "ceza oluşturur"
+    OGRENCI     ||--o{ CEZA         : "öder"
