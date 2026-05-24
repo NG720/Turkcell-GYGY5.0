@@ -1,11 +1,13 @@
 package com.library.cqrs.dto.command;
 
+import com.library.cqrs.core.mediator.cqrs.Command;
+import com.library.cqrs.entity.Kitap;
 import lombok.*;
 
 public class KitapCommands {
 
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-    public static class CreateKitapCommand {
+    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
+    public static class CreateKitapCommand implements Command<Kitap> {
         private String isbn;
         private String baslik;
         private String yazar;
@@ -15,8 +17,8 @@ public class KitapCommands {
         private Integer toplamKopya;
     }
 
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-    public static class UpdateKitapCommand {
+    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
+    public static class UpdateKitapCommand implements Command<Kitap> {
         private Integer id;
         private String baslik;
         private String yazar;
@@ -26,8 +28,8 @@ public class KitapCommands {
         private Integer toplamKopya;
     }
 
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-    public static class DeleteKitapCommand {
+    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
+    public static class DeleteKitapCommand implements Command<Void> {
         private Integer id;
     }
 }

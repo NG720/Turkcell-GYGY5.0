@@ -1,9 +1,8 @@
 package com.library.cqrs.controller;
 
+import com.library.cqrs.core.mediator.Mediator;
 import com.library.cqrs.dto.command.KitapCommands.*;
 import com.library.cqrs.dto.query.Queries.*;
-import com.library.cqrs.handler.command.KitapCommandHandler;
-import com.library.cqrs.handler.query.QueryHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -13,38 +12,37 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class KitapController {
 
-    private final KitapCommandHandler commandHandler;
-    private final QueryHandler queryHandler;
+    private final Mediator mediator;
 
     @GetMapping
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(queryHandler.handle(new GetAllKitapQuery()));
+        return ResponseEntity.ok(mediator.send(new GetAllKitapQuery()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id) {
-        return ResponseEntity.ok(queryHandler.handle(new GetKitapByIdQuery(id)));
+        return ResponseEntity.ok(mediator.send(new GetKitapByIdQuery(id)));
     }
 
     @GetMapping("/mevcut")
     public ResponseEntity<?> getMevcut() {
-        return ResponseEntity.ok(queryHandler.handle(new GetMevcutKitaplarQuery()));
+        return ResponseEntity.ok(mediator.send(new GetMevcutKitaplarQuery()));
     }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateKitapCommand cmd) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commandHandler.handle(cmd));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mediator.send(cmd));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UpdateKitapCommand cmd) {
         cmd.setId(id);
-        return ResponseEntity.ok(commandHandler.handle(cmd));
+        return ResponseEntity.ok(mediator.send(cmd));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        commandHandler.handle(new DeleteKitapCommand(id));
+        mediator.send(new DeleteKitapCommand(id));
         return ResponseEntity.noContent().build();
     }
 }
