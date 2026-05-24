@@ -1,8 +1,11 @@
 package com.library.cqrs.dto.command;
 
 import com.library.cqrs.core.mediator.cqrs.Command;
+import com.library.cqrs.core.security.Role;
+import com.library.cqrs.core.security.authorization.AuthorizableRequest;
 import com.library.cqrs.entity.Kitap;
 import lombok.*;
+import java.util.List;
 
 public class KitapCommands {
 
@@ -28,8 +31,14 @@ public class KitapCommands {
         private Integer toplamKopya;
     }
 
+    // Sadece ADMIN silebilir
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
-    public static class DeleteKitapCommand implements Command<Void> {
+    public static class DeleteKitapCommand implements Command<Void>, AuthorizableRequest {
         private Integer id;
+
+        @Override
+        public List<Role> getRequiredRoles() {
+            return List.of(Role.ADMIN);
+        }
     }
 }
